@@ -1,0 +1,102 @@
+---
+title: "Summary table for Q15 by Q3"
+author: "Jarad Niemi"
+date: "November 10, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load the data and remove all questions except Q3 and Q15 and remove Q15p as it
+is an "Other" category. 
+
+```{r load_data, message=FALSE}
+library(dplyr)
+
+d <- STRIPSArbuckle::survey %>% 
+  dplyr::select(CaseID,
+         starts_with("3."), 
+         starts_with("15"),
+         -starts_with("15p")) %>%
+  tidyr::gather(question, response, -CaseID, -`3. Do you currently live on a farm?`) 
+
+names(d)[2] <- "farmer"
+```
+
+Compute sufficient statistics for the data, i.e. the number of respondents for 
+each category (No Response, No Priority, Slight Priority, Moderate Priority, 
+High Priority, and Very High Priority) for all parts of question 15 stratified
+by their answer to question 3. 
+
+```{r summarize_data}
+ordered_responses = c("No response",
+                      "No Priority",
+                      "Slight Priority",
+                      "Moderate Priority",
+                      "High Priority",
+                      "Very High Priority")
+
+s = d %>%
+  filter(!is.na(farmer)) %>%
+  mutate(question = substr(question, 1,4),
+         response = ifelse(is.na(response), "No response", response)) %>%
+  group_by(farmer, question, response) %>%
+  summarize(n = length(CaseID)) %>%
+  ungroup() %>%
+  mutate(response = factor(response, levels=ordered_responses))
+```
+
+For each question, run a t-test by assuming numeric values for the responses
+that are consecutive integers (0 to 4 below). 
+
+```{r t_test}
+# Run t test to get t statistic and p value
+make_data <- function(n) {
+  data.frame(y=rep(0:4,n)) # Converts 
+}
+
+my_t.test <- function(d) {
+  test = t.test(make_data(d$No),
+                make_data(d$Yes),
+                var.equal = TRUE)
+  data.frame(t = formatC(test$statistic, 2, format='f'),
+             p = formatC(test$p.value, 3, format='f'))
+}
+
+test = s %>%
+  tidyr::spread(farmer,n) %>%
+  arrange(question, response) %>%
+  filter(response != "No response") %>%
+  group_by(question) %>%
+  do(my_t.test(.))
+```
+
+Combine the counts with the t statistic and p value to provide a parsimonious 
+summary of the results. 
+
+```{r print_results, results='asis'}
+ordered_colnames = paste(rep(c("No","Yes"), each=length(ordered_responses)), 
+                         ordered_responses,
+                         sep="_")
+
+tmp_for_table = s %>%
+  mutate(column_name = factor(paste(farmer,response,sep="_"), 
+                              levels = ordered_colnames)) %>%
+  select(question, column_name, n) 
+
+for_table <- tmp_for_table %>%
+  tidyr::spread(column_name, n) %>%
+  left_join(test, by="question") 
+
+names(for_table) <- gsub("No_", "", names(for_table))
+names(for_table) <- gsub("Yes_","", names(for_table))
+
+
+htmlTable::htmlTable(for_table,
+                     rnames = FALSE,
+                     cgroup = c("","Non-farmer","Farmer","",""),
+                     n.cgroup = c(1,6,6,1,1),
+                     align = "l|rrrrrr|rrrrrr|rr")
+```

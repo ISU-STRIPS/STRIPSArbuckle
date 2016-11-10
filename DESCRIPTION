@@ -16,7 +16,8 @@ Suggests:
     tidyr,
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    htmlTable
 Remotes:
     ISU-STRIPS/STRIPSMeta
 License: GPL-3
