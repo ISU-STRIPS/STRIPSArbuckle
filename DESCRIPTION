@@ -1,0 +1,26 @@
+Package: STRIPSArbuckle
+Title: STRIPS Arbuckle Lab data
+Version: 0.1
+Authors@R: c(
+    person("Jarad", "Niemi", email = "niemi@iastate.edu", role = c("aut", "cre")),
+    person("J. Gordon", "Arbuckle", email = "arbuckle@iastate.edu", role = "aut")
+    )
+Description: Survey data relating to STRIPS experiments including whether the 
+    respondent lives on a farm and the priority they have for various economic
+    and environmental activities.
+Depends:
+    R (>= 3.0)
+Suggests:
+    STRIPSMeta,
+    dplyr,
+    tidyr,
+    testthat,
+    knitr,
+    rmarkdown
+Remotes:
+    ISU-STRIPS/STRIPSMeta
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
+VignetteBuilder: knitr
