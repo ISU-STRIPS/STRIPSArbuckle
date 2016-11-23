@@ -126,4 +126,6 @@ htmlTable::htmlTable(for_table,
                      cgroup = c("","Non-farmer","Farmer","",""),
                      n.cgroup = c(1,6,6,1,1),
                      align = "l|rrrrrr|rrrrrr|rr")
+
+#for_table %>% readr::write_csv(path="social_data_table.csv")
 ```
