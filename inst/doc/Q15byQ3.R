@@ -1,22 +1,7 @@
----
-title: "Analyzing Q15 by Q3"
-author: "Jarad Niemi"
-date: "November 10, 2016"
-output: html_document
-vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Analyzing Q15 by Q3}
-  %\usepackage[utf8]{inputenc}
----
-
-```{r setup, include=FALSE}
+## ----setup, include=FALSE------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
-```
 
-Load the data and remove all questions except Q3 and Q15 and remove Q15p as it
-is an "Other" category. 
-
-```{r load_data, message=FALSE}
+## ----load_data, message=FALSE--------------------------------------------
 library(dplyr)
 
 d <- STRIPSArbuckle::survey_responses %>% 
@@ -26,14 +11,8 @@ d <- STRIPSArbuckle::survey_responses %>%
          -starts_with("q15p")) %>%
   tidyr::gather(question, response, -CaseID, -q3) %>%
   rename(farmer = q3)
-```
 
-Compute sufficient statistics for the data, i.e. the number of respondents for 
-each category (No Response, No Priority, Slight Priority, Moderate Priority, 
-High Priority, and Very High Priority) for all parts of question 15 stratified
-by their answer to question 3. 
-
-```{r summarize_data}
+## ----summarize_data------------------------------------------------------
 ordered_responses = c("No response",
                       "No Priority",
                       "Slight Priority",
@@ -49,12 +28,8 @@ s = d %>%
   summarize(n = length(CaseID)) %>%
   ungroup() %>%
   mutate(response = factor(response, levels=ordered_responses))
-```
 
-For each question, run a t-test by assuming numeric values for the responses
-that are consecutive integers (0 to 4 below). 
-
-```{r t_test}
+## ----t_test--------------------------------------------------------------
 # Run t test to get t statistic and p value
 make_data <- function(n) {
   data.frame(y=rep(0:4,n)) # Converts 
@@ -74,9 +49,8 @@ test = s %>%
   filter(response != "No response") %>%
   group_by(question) %>%
   do(my_t.test(.))
-```
 
-```{r}
+## ------------------------------------------------------------------------
 # Create data.frame with nice question formatting
 pretty_names = 
   c("Increase recreation opportunities",
@@ -96,13 +70,8 @@ pretty_names =
     "Improve non-game habitat")
 
 names(pretty_names) <- paste0("q15",letters[1:15])
-```
 
-
-Combine the counts with the t statistic and p value to provide a parsimonious 
-summary of the results. 
-
-```{r print_results, results='asis'}
+## ----print_results, results='asis'---------------------------------------
 ordered_colnames = paste(rep(c("No","Yes"), each=length(ordered_responses)), 
                          ordered_responses,
                          sep="_")
@@ -126,4 +95,4 @@ htmlTable::htmlTable(for_table,
                      cgroup = c("","Non-farmer","Farmer","",""),
                      n.cgroup = c(1,6,6,1,1),
                      align = "l|rrrrrr|rrrrrr|rr")
-```
+
