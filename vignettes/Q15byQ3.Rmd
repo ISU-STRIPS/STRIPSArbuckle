@@ -152,11 +152,14 @@ g_data <- test %>%
          farmer_signif = factor(farmer_signif, 
                                 levels = c("Farmer higher (p<0.05)",
                                            "Farmer higher (p>0.05)",
-                                           "Non-farmer higher (p>0.05)",
-                                           "Non-farmer higher (p<0.05)")),
+                                           "Non-farmer higher (p<0.05)",
+                                           "Non-farmer higher (p>0.05)")),
          question = plyr::revalue(question, pretty_names),
-         question = factor(question, levels = question[order(Yes+No, 
-                                                             decreasing = TRUE)]))
+         question = factor(question, 
+                           
+                           # hack to get order to match table in manuscript
+                           levels = question[order(0.2*Yes+0.8*No, 
+                                                   decreasing = TRUE)]))
   
 library(ggplot2)
 cp2 = rgb(red = c(241,241,200,200)/256, 
@@ -167,8 +170,6 @@ names(cp2) = c("Non-farmer higher (p<0.05)",
                "Non-farmer higher (p>0.05)",
                "Farmer higher (p>0.05)",
                "Farmer higher (p<0.05)")
-
-# Determine x-axis ordering in the plot
 
 
 g_survey = ggplot(g_data, aes(x     = question, 
@@ -185,17 +186,22 @@ g_survey = ggplot(g_data, aes(x     = question,
                                 "Very high")) +
   scale_alpha_discrete(range=c(0.5,1)) +
   geom_segment(size=4) + 
-  theme(legend.position = c(0,0),
-       legend.justification = c(0, 0), 
-        axis.text.x = element_text(angle = 45, 
-                                   hjust = 1),
-        panel.grid.major.x = element_blank(),
-        legend.box.just=0) + 
-  labs(x="", y="Priority", title="", color="") +
+  theme(
+    legend.position = c(0,0),
+    legend.justification = c(0, 0), 
+    axis.text.x = element_text(angle = 45, hjust = 1, size=10),
+    axis.text.y = element_text(size=10),
+    legend.text = element_text(size=8),
+    legend.background = element_rect(fill=NA, color=NA),    
+    plot.margin=unit(c(-0.5,0.02,-0.5,0.4), "cm"),
+    panel.grid.major.x = element_blank()) + 
+  guides(color = guide_legend(nrow=2)) +
+  labs(x="", y="", title="", color="") +
   scale_color_manual(values = cp2, drop=FALSE)
 
 g_survey
 
-ggsave("survey_fig.pdf")
+ggsave("Fig3.tiff",
+       dpi = 300, height = 8, width = 11.4, units ="cm")
 ```
 
