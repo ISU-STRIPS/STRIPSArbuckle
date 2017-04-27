@@ -18,7 +18,7 @@ questions other than Q3 and Q15
 J. Gordon Arbuckle, \email{arbuckle@iastate.edu}
 }
 \seealso{
-\link{\code{survey_questions}}
+\code{\link{survey_questions}}
 }
 \keyword{datasets}
 

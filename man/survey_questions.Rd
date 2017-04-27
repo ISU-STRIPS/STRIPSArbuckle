@@ -17,7 +17,7 @@ data.frame provides the associated wording for the question.
 J. Gordon Arbuckle, \email{arbuckle@iastate.edu}
 }
 \seealso{
-\link{\code{survey_responses}}
+\code{\link{survey_responses}}
 }
 \keyword{datasets}
 

@@ -9,7 +9,7 @@
 #'
 #' @author J. Gordon Arbuckle, \email{arbuckle@iastate.edu}
 #'
-#' @seealso \link{\code{survey_questions}}
+#' @seealso \code{\link{survey_questions}}
 #'
 "survey_responses"
 
@@ -24,7 +24,7 @@
 #'
 #' @author J. Gordon Arbuckle, \email{arbuckle@iastate.edu}
 #'
-#' @seealso \link{\code{survey_responses}}
+#' @seealso \code{\link{survey_responses}}
 #'
 "survey_questions"
 
