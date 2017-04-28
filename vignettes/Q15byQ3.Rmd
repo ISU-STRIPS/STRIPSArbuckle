@@ -191,13 +191,13 @@ g_survey = ggplot(g_data, aes(x     = question,
     legend.justification = c(0, 0), 
     axis.text.x = element_text(angle = 45, hjust = 1, size=8),
     axis.text.y = element_text(size=8),
-    legend.text = element_text(size=4),
+    legend.text = element_text(size=6),
     legend.background = element_rect(fill=NA, color=NA),
     legend.key.width = unit(-1,"line"),
-    plot.margin=unit(c(-0.5,0.02,-0.45,-0.15), "cm"),
+    plot.margin=unit(c(-0.5,0.02,-0.45,0.1), "cm"),
     panel.grid.major.x = element_blank()) + 
   guides(color = guide_legend(nrow=2)) +
-  labs(x="", y="", title="", color="") +
+  labs(x="", y="Priority", title="", color="") +
   scale_color_manual(values = cp2, drop=FALSE)
 
 g_survey
