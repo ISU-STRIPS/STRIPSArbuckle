@@ -83,7 +83,7 @@ test = s %>%
 # Create data.frame with nice question formatting
 pretty_names = 
   c("Increase recreation opportunities",
-    "Beautification",
+    "Landscape beautification",
     "Increase crop production",
     "Increase livestock production",
     "Improve flood control",
@@ -187,14 +187,14 @@ g_survey = ggplot(g_data, aes(x     = question,
   scale_alpha_discrete(range=c(0.5,1)) +
   geom_segment(size=4) + 
   theme(
-    legend.position = c(0,-0.05),
+    legend.position = c(0,0),
     legend.justification = c(0, 0), 
-    axis.text.x = element_text(angle = 45, hjust = 1, size=10),
-    axis.text.y = element_text(size=10),
-    legend.text = element_text(size=6),
-    legend.background = element_rect(fill=NA, color=NA),    
+    axis.text.x = element_text(angle = 45, hjust = 1, size=8),
+    axis.text.y = element_text(size=8),
+    legend.text = element_text(size=4),
+    legend.background = element_rect(fill=NA, color=NA),
     legend.key.width = unit(-1,"line"),
-    plot.margin=unit(c(-0.5,0.02,-0.5,0.4), "cm"),
+    plot.margin=unit(c(-0.5,0.02,-0.45,-0.15), "cm"),
     panel.grid.major.x = element_blank()) + 
   guides(color = guide_legend(nrow=2)) +
   labs(x="", y="", title="", color="") +
