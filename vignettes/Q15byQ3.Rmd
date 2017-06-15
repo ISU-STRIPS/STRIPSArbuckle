@@ -1,7 +1,7 @@
 ---
 title: "Analyzing Q15 by Q3"
 author: "Jarad Niemi"
-date: "November 10, 2016"
+date: "June 15, 2017"
 output: html_document
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -138,7 +138,7 @@ htmlTable::htmlTable(for_table,
 #for_table %>% readr::write_csv(path="social_data_table.csv")
 ```
 
-Create figure of results
+Create data for figure
 ```{r}
 g_data <- test %>% 
   mutate(significant = p<0.05,
@@ -160,7 +160,11 @@ g_data <- test %>%
                            # hack to get order to match table in manuscript
                            levels = question[order(0.2*Yes+0.8*No, 
                                                    decreasing = TRUE)]))
-  
+```
+
+Create figure
+
+```{r}
 library(ggplot2)
 cp2 = rgb(red = c(241,241,200,200)/256, 
          green = c(190,190,0,0)/256,
@@ -202,7 +206,57 @@ g_survey = ggplot(g_data, aes(x     = question,
 
 g_survey
 
-ggsave("Fig3.tiff",
+ggsave("Fig4.tiff",
+       dpi = 300, height = 7, width = 8.7, units ="cm")
+```
+
+
+
+Create alternative figure
+```{r}
+
+library(ggplot2)
+cp2 = rgb(red = c(241,200)/256, 
+         green = c(190,0)/256,
+         blue = c(72,0)/256,
+         alpha = c(1,1))
+names(cp2) = c("No",
+               "Yes")
+
+g2_data = g_data %>%
+  select(question, No, Yes) %>%
+  tidyr::gather(Farmer, Priority, -question)
+
+g_survey = ggplot(g2_data, aes(x = question,
+                               y = Priority,
+                               fill = Farmer)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_bw() +
+  scale_y_continuous(limit=c(0,4),
+                     labels = c("None",
+                                "Slight",
+                                "Moderate",
+                                "High",
+                                "Very high")) +
+  theme(
+    legend.position = c(1,1),
+    legend.justification = c(1,1),
+    axis.text.x = element_text(angle = 45, hjust = 1, size=8),
+    axis.text.y = element_text(size=8),
+    legend.text = element_text(size=4),
+    legend.title = element_text(size=6),
+    legend.background = element_rect(fill=NA, color=NA),
+    # legend.key.width = unit(-1,"line"),
+    plot.margin=unit(c(0,0.02,-0.45,0.1), "cm"),
+    panel.grid.major.x = element_blank()
+    ) +
+  guides(fill = guide_legend(override.aes = list(size=1))) + 
+  labs(x='') + 
+  scale_fill_manual(values = cp2, drop=FALSE)
+
+g_survey
+
+ggsave("Fig4_alt.tiff",
        dpi = 300, height = 7, width = 8.7, units ="cm")
 ```
 
