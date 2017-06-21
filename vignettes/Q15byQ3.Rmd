@@ -152,8 +152,8 @@ g_data <- test %>%
          farmer_signif = factor(farmer_signif, 
                                 levels = c("Farmer higher (p<0.05)",
                                            "Farmer higher (p>0.05)",
-                                           "Non-farmer higher (p<0.05)",
-                                           "Non-farmer higher (p>0.05)")),
+                                           "Non-farmer higher (p>0.05)",
+                                           "Non-farmer higher (p<0.05)")),
          question = plyr::revalue(question, pretty_names),
          question = factor(question, 
                            
@@ -192,7 +192,7 @@ g_survey = ggplot(g_data, aes(x     = question,
   geom_segment(size=4) + 
   theme(
     legend.position = c(0,0),
-    legend.justification = c(0, 0), 
+    legend.justification = c(0, 0),
     axis.text.x = element_text(angle = 45, hjust = 1, size=8),
     axis.text.y = element_text(size=8),
     legend.text = element_text(size=6),
@@ -200,9 +200,10 @@ g_survey = ggplot(g_data, aes(x     = question,
     legend.key.width = unit(-1,"line"),
     plot.margin=unit(c(-0.5,0.02,-0.45,0.1), "cm"),
     panel.grid.major.x = element_blank()) + 
-  guides(color = guide_legend(nrow=2)) +
+  guides(color = guide_legend(nrow=4)) +
   labs(x="", y="Priority", title="", color="") +
-  scale_color_manual(values = cp2, drop=FALSE)
+  scale_color_manual(values = cp2, drop=FALSE) + 
+  coord_flip()
 
 g_survey
 
@@ -216,11 +217,11 @@ Create alternative figure
 ```{r}
 
 library(ggplot2)
-cp2 = rgb(red = c(241,200)/256, 
+cp3 = rgb(red = c(241,200)/256, 
          green = c(190,0)/256,
          blue = c(72,0)/256,
          alpha = c(1,1))
-names(cp2) = c("No",
+names(cp3) = c("No",
                "Yes")
 
 g2_data = g_data %>%
@@ -229,8 +230,8 @@ g2_data = g_data %>%
 
 g_survey = ggplot(g2_data, aes(x = question,
                                y = Priority,
-                               fill = Farmer)) +
-  geom_bar(stat = "identity", position = "dodge") +
+                               color = Farmer)) +
+  geom_point() +
   theme_bw() +
   scale_y_continuous(limit=c(0,4),
                      labels = c("None",
@@ -243,16 +244,17 @@ g_survey = ggplot(g2_data, aes(x = question,
     legend.justification = c(1,1),
     axis.text.x = element_text(angle = 45, hjust = 1, size=8),
     axis.text.y = element_text(size=8),
-    legend.text = element_text(size=4),
-    legend.title = element_text(size=6),
+    legend.text = element_text(size=6),
+    legend.title = element_text(size=8),
     legend.background = element_rect(fill=NA, color=NA),
     # legend.key.width = unit(-1,"line"),
     plot.margin=unit(c(0,0.02,-0.45,0.1), "cm"),
     panel.grid.major.x = element_blank()
     ) +
-  guides(fill = guide_legend(override.aes = list(size=1))) + 
+  guides(color = guide_legend(override.aes = list(size=1))) + 
   labs(x='') + 
-  scale_fill_manual(values = cp2, drop=FALSE)
+  scale_color_manual(values = cp3, drop=FALSE) +
+  coord_flip()
 
 g_survey
 
