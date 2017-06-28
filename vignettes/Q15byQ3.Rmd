@@ -196,7 +196,7 @@ g_survey = ggplot(g_data, aes(x     = question,
     plot.margin=unit(c(-0.5,0.02,-0.45,-0.45), "cm"),
     panel.grid.major.x = element_blank()) + 
   
-  labs(x="", y="Priority", title="", color="Farmer priority") +
+  labs(x="", y="Priority", title="", color="Farm resident") +
   scale_color_manual(values = cp2, drop=FALSE) + 
   coord_flip()
 
